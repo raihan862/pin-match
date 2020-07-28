@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset = "UTF-8">
+    <meta name = "viewport" content = "width = device-width, initial-scale = 1.0">
+    <title>Pin Generator</title>
+    <link rel = "stylesheet" href = "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity = "sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin = "anonymous">
+    <link rel = "stylesheet" href = "style.css">
+</head>
+<body onload = "clearEverything()">
+    <div class = "container">
+        <div class = "row">
+            <div class = "col-md-6">
+                <div class = "pin-generator half-width">
+                    <form action = "#" autocomplete = "off">
+                    <input class = "form-control" type = "text" value = "" >
+                    <button class = "generate-btn" onclick = "generatePin(this)">Generate Pin</button>
+                </form>
+                </div>
+            </div>
+            <div class = "col-md-6">
+                <div class = "input-section half-width">
+                    <input class = "form-control" id = 'display' type = "text" >
+                    <div class = "numbers">
+                        <div class = "calc-body" id = "calc-btn">
+                            <div class = "calc-button-row">
+                              <div class = "button">7</div>
+                              <div class = "button">8</div>
+                              <div class = "button">9</div>
+                            </div>
+                            <div class = "calc-button-row">
+                              <div class = "button">4</div>
+                              <div class = "button">5</div>
+                              <div class = "button">6</div>
+                            </div>
+                            <div class = "calc-button-row">
+                              <div class = "button">1</div>
+                              <div class = "button">2</div>
+                              <div class = "button">3</div>
+                            </div>
+                            <div class = "calc-button-row">
+                                <div class = "button"><</div>
+                                <div class = "button">0</div>
+                                <div class = "button">C</div>
+                            </div>
+                            <div>
+                                <button type = "submit" class = "submit-btn" id = 'submit'>Submit</button>
+                                <p class = "action-left"> <span id = "tryRemain">3</span> try left</p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class = "notify-section">
+            <p class = "notify" id = 'wrong'>❌ Pin Didn't Match, Please try again</p>
+            <p class = "notify" id = 'correct'>✅ Pin Matched... Secret door is opening for you</p>
+        </div>
+    </div>
+    <script>
+        let pin;
+        var inputButton  =  document.getElementById('calc-btn');
+        let display  =  document.getElementById('display');
+        let tryReamin = document.getElementById('tryRemain');
+        let successText = document.getElementById('correct');
+        let wrongText = document.getElementById('wrong');
+        let submitBtn = document.getElementById('submit')
+
+        let numberOfTry = 3;
+       
+         
+        inputButton.addEventListener('click',function(evt){
+            let displayText = display.value;
+            if(evt.target.className == 'button'){
+                let btnText = evt.target.innerText;
+                
+                switch(btnText){
+                    case '<' :
+                        if(displayText.length>0){
+                            display.value  =  displayText.substring(0,displayText.length-1);
+                        }
+                        break;
+                    case 'C':
+                        display.value = '';
+                        break;
+                    
+                    default:
+                    display.value =  displayText + btnText;
+                }
+            }
+            else if(evt.target.className == 'submit-btn'){
+                        submitfnc(displayText);   
+            }
+        });
+
+
+        function submitfnc(userGivenPin){
+            display.value = '';
+            if(userGivenPin == pin){
+
+                successText.style.display = 'block';
+                wrongText.style.display = 'none';
+                numberOfTry  = 3;
+            }
+            else{
+                numberOfTry -= 1;
+                if(numberOfTry<1){
+
+                    submitBtn.style.display = 'none'
+                }
+                
+                wrongText.style.display = 'block';
+                successText.style.display = 'none';
+            }
+
+            tryReamin.innerHTML = numberOfTry;
+        }
+
+        function generatePin(evt){
+            numberOfTry = 3;
+            tryReamin.innerHTML = numberOfTry;
+            let pinOutputField  =  evt.previousElementSibling;
+            pin = parseInt(Math.random()*(10000-1000)+1000);
+            pinOutputField.value = pin;
+            clearEverything();
+        }
+
+        function clearEverything(){
+            display.value = '';
+        }
+       
+    </script>
+</body>
+</html>
